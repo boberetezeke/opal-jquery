@@ -90,6 +90,10 @@ class Element < `dom_class`
   alias_native :slide_up, :slideUp
   alias_native :slide_toggle, :slideToggle
   alias_native :fade_toggle, :fadeToggle
+  alias_native :outer_width, :outerWidth
+  alias_native :inner_width, :innerWidth
+  alias_native :outer_height, :outerHeight
+  alias_native :inner_height, :innerHeight
 
   def to_n
     self
