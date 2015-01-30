@@ -45,19 +45,30 @@ describe Element do
       Element.find('#attr-foo')[:title].should == "Hello there!"
     end
 
-    it 'should return an empty string for an empty attribute value' do
-      Element.find('#attr-bar')[:title].should == ""
-      Element.find('#attr-baz')[:title].should == ""
+    it 'should return nil for an empty attribute' do
+      expect(Element.find('#attr-bar')[:title]).to be_nil
+      expect(Element.find('#attr-baz')[:title]).to be_nil
+    end
+  end
+
+  describe '#attr' do
+    it 'returns attributes from elements' do
+      expect(Element.find('#attr-foo').attr(:title)).to eq('Hello there!')
+    end
+
+    it 'returns nil for empty attributes' do
+      expect(Element.find('#attr-bar').attr(:title)).to be_nil
+      expect(Element.find('#attr-baz').attr(:title)).to be_nil
     end
   end
 
   describe '#[]=' do
     it 'should set the attr value on the element' do
       woosh = Element.find '#attr-woosh'
-      woosh[:title].should == ""
+      expect(woosh[:title]).to be_nil
 
       woosh[:title] = "Oranges"
-      woosh[:title].should == "Oranges"
+      expect(woosh[:title]).to eq('Oranges')
     end
 
     it 'should replace the old value for the attribute' do
@@ -72,30 +83,32 @@ describe Element do
   describe "#add_class" do
     it "should add the given class name to the element" do
       foo = Element.find '#foo'
-      foo.has_class?('lemons').should eq(false)
+      expect(foo).to_not have_class('lemons')
+
       foo.add_class 'lemons'
-      foo.has_class?('lemons').should eq(true)
+      expect(foo).to have_class('lemons')
     end
 
     it "should not duplicate class names on an element" do
       bar = Element.find '#bar'
-      bar.has_class?('apples').should eq(true)
+      expect(bar).to have_class('apples')
+
       bar.add_class 'apples'
-      bar.class_name.should == 'apples'
+      expect(bar.class_name).to eq('apples')
     end
 
     it "should return self" do
       baz = Element.find '#baz'
-      baz.add_class('oranges').should equal(baz)
-      baz.add_class('oranges').should equal(baz)
+      expect(baz.add_class('oranges')).to eq(baz)
     end
   end
 
   describe '#has_class?' do
     it "should return true if the element has the given class" do
-      Element.find('#has-foo').has_class?("apples").should eq(true)
-      Element.find('#has-foo').has_class?("oranges").should eq(false)
-      Element.find('#has-bar').has_class?("lemons").should eq(true)
+      expect(Element.find('#has-foo')).to have_class('apples')
+      expect(Element.find('#has-bar')).to have_class('lemons')
+
+      expect(Element.find('#has-foo')).to_not have_class('oranges')
     end
   end
 

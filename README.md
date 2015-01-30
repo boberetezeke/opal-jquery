@@ -1,30 +1,13 @@
-# opal-jquery
+# opal-jquery: jQuery Wrapper For Opal
 
-[![Build Status](https://secure.travis-ci.org/opal/opal-jquery.png?branch=master)](http://travis-ci.org/opal/opal-jquery)
+[![Build Status](http://img.shields.io/travis/opal/opal-jquery/master.svg)](http://travis-ci.org/opal/opal-jquery)
 
 opal-jquery provides DOM access to opal by wrapping jQuery (or zepto)
 and providing a nice ruby syntax for dealing with jQuery instances.
-opal-jquery is [hosted on github](http://github.com/opal/opal-jquery).
 
-See the [website for documentation](http://opalrb.org/jquery).
+See the Opal website for [documentation](http://opalrb.org/docs/jquery).
 
-## Documentation
-
-```ruby
-elements = Element.find('.foo')
-# => [<div class="foo">, ...]
-
-elements.class
-# => JQuery
-
-elements.on(:click) do
-  alert "element was clicked"
-end
-```
-
-### Getting Started
-
-#### Installation
+## Installation
 
 Install opal-jquery from RubyGems:
 
@@ -37,10 +20,77 @@ Or include it in your Gemfile for Bundler:
 ```ruby
 gem 'opal-jquery'
 ```
+## Running Specs
 
-### Interacting with the DOM
+Get the dependencies:
 
-#### Finding elements
+    $ bundle install
+
+### Browser
+
+You can run the specs in any web browser, by running the `config.ru` rack file:
+
+    $ bundle exec rackup
+
+And then visiting `http://localhost:9292` in any web browser.
+
+### Phantomjs
+
+You will need phantomjs to run the specs outside the browser.  It can
+be downloaded at [http://phantomjs.org/download.html](http://phantomjs.org/download.html)
+
+On osx you can install through homebrew
+
+    $ brew update; brew install phantomjs
+
+Run the tests inside a phantom.js runner:
+
+    $ bundle exec rake
+
+### Zepto
+
+opal-jquery also supports zepto. To run specs for zepto use the rake task:
+
+    $ bundle exec rake zepto
+
+## Getting Started
+
+### Usage
+
+`opal-jquery` can now be easily added to your opal application sources using a
+standard require:
+
+```ruby
+# app/application.rb
+require 'opal'
+require 'jquery'
+require 'opal-jquery'
+
+alert "Hello from jquery + opal"
+```
+
+> **Note**: this file requires two important dependencies, `jquery` and `opal-jquery`.
+> You need to bring your own `jquery.js` file as the gem does not include one. If
+> you are using the asset pipeline with rails, then this should be available
+> already, otherwise download a copy and place it into `app/` or whichever directory
+> you are compiling assets from. You can alternatively require a zepto instance.
+
+The `#alert` method is provided by `opal-jquery`. If the message displays, then
+`jquery` support should be working.
+
+### How does opal-jquery work
+
+`opal-jquery` provides an `Element` class, whose instances are toll-free
+bridged instances of jquery objects. Just like ruby arrays are just javascript
+arrays, `Element` instances are just jquery objects. This makes interaction
+with jquery plugins much easier.
+
+Also, `Element` will try to bridge with Zepto if it cannot find jQuery loaded,
+making it ideal for mobile applications as well.
+
+## Interacting with the DOM
+
+### Finding Elements
 
 opal-jquery provides the `Element` class, which can be used to find elements in
 the current document:
@@ -80,7 +130,7 @@ el.find '.foo'
 # => #<Element .... >
 ```
 
-#### Running code on document ready
+### Running code on document ready
 
 Just like jQuery, opal-jquery requires the document to be ready to
 be able to fully interact with the page. Any top level access should
@@ -94,7 +144,7 @@ end
 
 The `Kernel#alert` method is shown above too.
 
-#### Event handling
+### Event handling
 
 The `Element#on` method is used to attach event handlers to elements:
 
@@ -123,7 +173,15 @@ Element.find('#my_link').on(:click) do |evt|
 end
 ```
 
-#### CSS styles and classnames
+You can access the element which triggered the event by `#current_target`.
+
+```ruby
+Document.on :click do |evt|
+  puts "clicked on: #{evt.current_target}"
+end
+```
+
+### CSS styles and classnames
 
 The various jQuery methods are available on `Element` instances:
 
@@ -158,7 +216,7 @@ el.css 'color'
 # => 'blue'
 ```
 
-### HTTP/AJAX requests
+## HTTP/AJAX requests
 
 jQuery's Ajax implementation is also wrapped in the top level HTTP
 class.
@@ -202,7 +260,7 @@ The request is actually triggered inside the `HTTP.get` method, but due
 to the async nature of the request, the callback and errback handlers can
 be added anytime before the request returns.
 
-#### Handling responses
+### Handling responses
 
 Web apps deal with JSON responses quite frequently, so there is a useful
 `#json` helper method to get the JSON content from a request:
@@ -231,48 +289,6 @@ request.errback { |response|
   puts "failed with status #{response.status_code}"
 }
 ```
-### HTTP
-
-The `HTTP` class wraps jQuery's ajax request into a ruby class.
-
-```ruby
-HTTP.get("/users/1.json") do |response|
-  puts "Got response!"
-end
-```
-
-## Running Specs
-
-Get the dependencies:
-
-    $ bundle install
-
-### Browser
-
-You can run the specs in any web browser, by running the `config.ru` rack file:
-
-    $ bundle exec rackup
-
-And then visiting `http://localhost:9292` in any web browser.
-
-### Phantomjs
-
-You will need phantomjs to run the specs outside the browser.  It can
-be downloaded at [http://phantomjs.org/download.html](http://phantomjs.org/download.html)
-
-On osx you can install through homebrew
-
-    $ brew update; brew install phantomjs
-
-Run the tests inside a phantom.js runner:
-
-    $ bundle exec rake
-
-### Zepto
-
-opal-jquery also supports zepto. To run specs for zepto use the rake task:
-
-    $ bundle exec rake zepto
 
 ##  License
 
@@ -297,3 +313,4 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+
