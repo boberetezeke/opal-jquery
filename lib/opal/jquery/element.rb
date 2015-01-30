@@ -379,6 +379,12 @@ class Element < `#{JQUERY_CLASS.to_n}`
   # @!method outer_height(include_margin = false)
   alias_native :outer_height, :outerHeight
 
+  # @!method inner_width(include_margin = false)
+  alias_native :inner_width, :innerWidth
+
+  # @!method inner_height(include_margin = false)
+  alias_native :inner_height, :innerHeight
+
   def to_n
     self
   end
