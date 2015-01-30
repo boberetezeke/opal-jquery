@@ -85,6 +85,8 @@ class Element < `dom_class`
   alias_native :value=, :val
   alias_native :scroll_left=, :scrollLeft
   alias_native :scroll_left, :scrollLeft
+  alias_native :scroll_top=, :scrollTop
+  alias_native :scroll_top, :scrollTop
   alias_native :remove_attribute, :removeAttr
   alias_native :slide_down, :slideDown
   alias_native :slide_up, :slideUp
